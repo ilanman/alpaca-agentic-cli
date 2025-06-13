@@ -1,0 +1,8 @@
+# .gitignore
+__pycache__/
+.env
+alpaca_trading.log
+*.pyc
+venv/
+alpaca-mcp-server/
+.DS_Store

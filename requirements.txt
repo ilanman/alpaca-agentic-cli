@@ -1,0 +1,5 @@
+openai>=1.25
+mcp>=0.4
+python-dotenv>=1.0
+tiktoken>=0.5
+pytest>=7.0   
