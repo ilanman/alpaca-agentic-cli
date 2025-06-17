@@ -5,49 +5,65 @@ Defines the ChatAgent class, responsible for managing the conversation loop,
 OpenAI LLM integration, MCP tool-calling, disposable queries, and token tracking.
 
 Key features:
-    - OpenAI function/tool calling support.
-    - Disposable (non-persistent) query mode with "-d" or "--disposable" prefix.
-    - Per-turn token window logging (cost control).
-    - Tool call logging for transparency.
-    - Robust OpenAI tool/response protocol compliance.
+    - OpenAI function/tool calling support
+    - Disposable (non-persistent) query mode with "-d" or "--disposable" prefix
+    - Per-turn token window logging (cost control)
+    - Tool call logging for transparency
+    - Robust OpenAI tool/response protocol compliance
 
 See README.md for architecture overview and example usage.
 """
 
-import tiktoken
 import json
-from typing import Dict, List, Any
-
+import logging
+from typing import Dict, List, Any, Optional, Union
+from dataclasses import dataclass
 from openai import OpenAI
 from .mcp_client import AlpacaMCPClient
+
+# Configure logging
+logging.basicConfig(
+    filename='chat_agent.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT = (
     "You are an AI trading assistant. "
     "When appropriate, call MCP tools to fetch data or place orders."
 )
 
-def count_tokens(messages, model="gpt-4o"):
-    try:
-        enc = tiktoken.encoding_for_model(model)
-    except KeyError:
-        enc = tiktoken.get_encoding("cl100k_base")  # fallback for unknown models
+@dataclass
+class Message:
+    """Represents a message in the conversation history."""
+    role: str
+    content: Optional[str] = None
+    tool_calls: Optional[List[Dict[str, Any]]] = None
+    tool_call_id: Optional[str] = None
 
-    total = 0
-    for m in messages:
-        # The format is: {"role": "...", "content": "...", ...}
-        for k, v in m.items():
-            if isinstance(v, str):
-                total += len(enc.encode(v))
-            elif isinstance(v, list):
-                for item in v:
-                    if isinstance(item, dict):
-                        for v2 in item.values():
-                            if isinstance(v2, str):
-                                total += len(enc.encode(v2))
-    return total
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert message to dictionary format for API calls."""
+        msg_dict = {"role": self.role}
+        if self.content is not None:
+            msg_dict["content"] = self.content
+        if self.tool_calls is not None:
+            msg_dict["tool_calls"] = self.tool_calls
+        if self.tool_call_id is not None:
+            msg_dict["tool_call_id"] = self.tool_call_id
+        return msg_dict
 
 def disposable_handler(chat_method):
-    async def wrapper(self, user_msg, *args, **kwargs):
+    """
+    Decorator to handle disposable query mode.
+    
+    Args:
+        chat_method: The chat method to wrap
+        
+    Returns:
+        Wrapped method that handles disposable queries
+    """
+    async def wrapper(self, user_msg: str, *args, **kwargs):
         disposable = False
         if user_msg.startswith("-d "):
             disposable = True
@@ -55,7 +71,6 @@ def disposable_handler(chat_method):
         elif user_msg.startswith("--disposable "):
             disposable = True
             user_msg = user_msg[len("--disposable "):].strip()
-        # Pass 'disposable' flag as a kwarg
         return await chat_method(self, user_msg, *args, disposable=disposable, **kwargs)
     return wrapper
 
@@ -64,87 +79,131 @@ class ChatAgent:
     Conversational agent integrating OpenAI LLM with Alpaca MCP tool calls.
 
     Attributes:
-        mcp (AlpacaMCPClient): Async client to the running MCP server.
-        model (str): OpenAI model name (e.g. "gpt-4o").
-        history (List[Dict]): Persisted conversation history (user/assistant/tool messages).
-
-    Methods:
-        chat(user_msg: str, *, disposable=False) -> str:
-            Process user input and return LLM response, handling tools as needed.
-
-        _openai_chat(...):
-            Internal utility to call OpenAI API with the constructed message history.
-
-        _print_token_count(messages):
-            Print cumulative token count for supplied message history (for cost awareness).
+        mcp (AlpacaMCPClient): Async client to the running MCP server
+        model (str): OpenAI model name (e.g. "gpt-4o")
+        history (List[Message]): Persisted conversation history
+        openai (OpenAI): OpenAI client instance
+        cumulative_tokens (Dict[str, int]): Running total of tokens used in the session
     """
-    
+
     def __init__(self, mcp: AlpacaMCPClient, model: str = "gpt-4o"):
+        """
+        Initialize the ChatAgent.
+        
+        Args:
+            mcp: AlpacaMCPClient instance
+            model: OpenAI model name
+        """
         self.mcp = mcp
         self.model = model
         self.openai = OpenAI()
-        self.history: List[Dict[str, Any]] = [
-            {"role": "system", "content": SYSTEM_PROMPT}
-        ]
+        self.history: List[Message] = [Message(role="system", content=SYSTEM_PROMPT)]
+        self.cumulative_tokens = {
+            "prompt": 0,
+            "completion": 0,
+            "total": 0
+        }
+        logger.info(f"Initialized ChatAgent with model {model}")
 
-    async def _openai_chat(self, tools: List[Dict[str, Any]] = None):
+    def _log_token_usage(self, response: Any) -> None:
         """
-        Call OpenAI's chat completions API with the current or override message history.
-
-        Args:
-            tools (List[dict], optional): Tool schema definitions to expose.
-            override_history (List[dict], optional): Use this instead of self.history.
-
-        Returns:
-            OpenAI chat completion response.
-        """
-                
-        return self.openai.chat.completions.create(
-            model=self.model,
-            messages=self.history,
-            tools=tools or [],
-        )
-    
-    # Add to your ChatAgent class:
-    def _print_token_count(self, messages):
-        """
-        Print the number of tokens in the supplied message list.
-
-        Args:
-            messages (List[dict]): Message history to count tokens for.
-        """
+        Log token usage from OpenAI API response and update cumulative counts.
         
-        tokens = count_tokens(messages, self.model)
-        print(f"[TOKENS] Cumulative token window being sent: {tokens} tokens")
+        Args:
+            response: OpenAI API response containing token usage information
+        """
+        if hasattr(response, 'usage'):
+            usage = response.usage
+            
+            # Update cumulative counts
+            self.cumulative_tokens["prompt"] += usage.prompt_tokens
+            self.cumulative_tokens["completion"] += usage.completion_tokens
+            self.cumulative_tokens["total"] += usage.total_tokens
+            
+            # Log to file
+            logger.info(f"Token usage - Prompt: {usage.prompt_tokens}, "
+                       f"Completion: {usage.completion_tokens}, "
+                       f"Total: {usage.total_tokens}")
+            logger.info(f"Cumulative tokens - Prompt: {self.cumulative_tokens['prompt']}, "
+                       f"Completion: {self.cumulative_tokens['completion']}, "
+                       f"Total: {self.cumulative_tokens['total']}")
+            
+            # Print to terminal
+            print("\n[TOKEN USAGE]")
+            print(f"Current request (including full context history):")
+            print(f"  Prompt tokens: {usage.prompt_tokens}")
+            print(f"  Completion tokens: {usage.completion_tokens}")
+            print(f"  Total tokens: {usage.total_tokens}")
+            print(f"\nSession totals (sum of all API calls):")
+            print(f"  Prompt tokens: {self.cumulative_tokens['prompt']}")
+            print(f"  Completion tokens: {self.cumulative_tokens['completion']}")
+            print(f"  Total tokens: {self.cumulative_tokens['total']}")
+
+    async def _openai_chat(self, tools: Optional[List[Dict[str, Any]]] = None) -> Any:
+        """
+        Call OpenAI's chat completions API with the current message history.
+        
+        Args:
+            tools: Optional list of tool schema definitions
+            
+        Returns:
+            OpenAI chat completion response
+        """
+        messages = [msg.to_dict() for msg in self.history]
+        
+        try:
+            response = self.openai.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                tools=tools or [],
+            )
+            self._log_token_usage(response)
+            logger.info("Successfully received response from OpenAI")
+            return response
+        except Exception as e:
+            logger.error(f"Error calling OpenAI API: {str(e)}")
+            raise
+
+    async def _handle_tool_calls(self, tool_calls: List[Any]) -> None:
+        """
+        Handle tool calls from the LLM response.
+        
+        Args:
+            tool_calls: List of tool calls to execute
+        """
+        for tool_call in tool_calls:
+            tool_name = tool_call.function.name
+            kwargs = json.loads(tool_call.function.arguments or "{}")
+            
+            logger.info(f"Executing tool call: {tool_name} with args: {kwargs}")
+            result = await self.mcp.call_tool(tool_name, kwargs)
+            
+            self.history.append(Message(
+                role="tool",
+                tool_call_id=tool_call.id,
+                content=str(result.content)
+            ))
 
     @disposable_handler
-    async def chat(self, user_msg: str, *, disposable=False) -> str:
+    async def chat(self, user_msg: str, *, disposable: bool = False) -> str:
         """
         Process a user message, handle OpenAI tool-calling, and return a reply.
-
+        
         Args:
-            user_msg (str): The user's message. Prefix with "-d" for disposable query.
-            disposable (bool): If True, do not persist this turn in conversation history.
-
+            user_msg: The user's message
+            disposable: If True, do not persist this turn in conversation history
+            
         Returns:
-            str: Assistant's reply.
+            Assistant's reply
         """
-
-        if disposable:
-            # Only use the current persisted history + THIS user message (don't persist this exchange after)
-            temp_history = self.history + [{"role": "user", "content": user_msg}]
-        else:
-            temp_history = self.history + [{"role": "user", "content": user_msg}]
-            self.history.append({"role": "user", "content": user_msg})  # Only persist here!
-
-        self._print_token_count(temp_history)
-
-        if disposable:
-            print("[DISPOSABLE] This Q&A will NOT be persisted.")
-        else:
-            print("[PERSISTED] This Q&A WILL be saved in history.")
-
-        # Discover available tools...
+        logger.info(f"Processing message (disposable={disposable}): {user_msg[:100]}...")
+        
+        # Add user message to history
+        user_message = Message(role="user", content=user_msg)
+        if not disposable:
+            self.history.append(user_message)
+        
+        # Get available tools
         raw_tools = await self.mcp.list_tools()
         tool_defs = [
             {
@@ -157,41 +216,31 @@ class ChatAgent:
             }
             for t in raw_tools
         ]
-
-        # Print token count for the current history
-        current_messages = temp_history if disposable else self.history
-        self._print_token_count(current_messages)
-
-        # 1. Send user message + tool schema, get LLM response
+        
+        # Get initial response from OpenAI
         oa_response = await self._openai_chat(tool_defs)
         msg = oa_response.choices[0].message
-
-        # 2. If model wants to call tools, handle it
+        
+        # Handle tool calls if present
         if hasattr(msg, "tool_calls") and msg.tool_calls:
-            # Add the assistant's tool_calls message to history (content must be None for tool calls)
-            self.history.append({
-                "role": "assistant",
-                "content": None,
-                "tool_calls": [tc.to_dict() for tc in msg.tool_calls],  # Ensure dict format for API
-            })
-            # For each tool call, execute and add a tool response to history
-            for tool_call in msg.tool_calls:
-                tool_name = tool_call.function.name
-                kwargs = json.loads(tool_call.function.arguments or "{}")
-                result = await self.mcp.call_tool(tool_name, kwargs)
-                print(f"[TOOL CALL] Tool: {tool_name}, Args: {kwargs}")
-                # Add tool's reply to history
-                self.history.append({
-                    "role": "tool",
-                    "tool_call_id": tool_call.id,
-                    "content": str(result.content),  # Make sure content is serializable
-                })
-            # 3. Get model's final answer with tool outputs in history (no tools param needed now)
+            print("\n[RESPONSE SOURCE] Generated using LLM with tool assistance")
+            logger.info("Processing tool calls from LLM response")
+            self.history.append(Message(
+                role="assistant",
+                tool_calls=[tc.to_dict() for tc in msg.tool_calls]
+            ))
+            
+            await self._handle_tool_calls(msg.tool_calls)
+            
+            # Get final response with tool outputs
             oa_response = await self._openai_chat()
             msg = oa_response.choices[0].message
-            self.history.append({"role": "assistant", "content": msg.content})
-            return msg.content
         else:
-            print("[LLM RESPONSE] No tool call used. Response came from LLM.")
-            self.history.append({"role": "assistant", "content": msg.content})
-            return msg.content
+            print("\n[RESPONSE SOURCE] Generated directly from LLM without tools")
+        
+        # Add assistant's response to history
+        if not disposable:
+            self.history.append(Message(role="assistant", content=msg.content))
+        
+        logger.info("Successfully processed message and generated response")
+        return msg.content

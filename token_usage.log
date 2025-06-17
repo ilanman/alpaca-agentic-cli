@@ -1,0 +1,118 @@
+{"timestamp": "2025-06-17T14:46:52.755775", "model": "gpt-4o", "prompt_tokens": 5475, "completion_tokens": 10, "total_tokens": 5485}
+{"timestamp": "2025-06-17T14:47:03.832920", "model": "gpt-4o", "prompt_tokens": 5493, "completion_tokens": 12, "total_tokens": 5505}
+{"timestamp": "2025-06-17T14:47:07.446860", "model": "gpt-4o", "prompt_tokens": 5513, "completion_tokens": 11, "total_tokens": 5524}
+{"timestamp": "2025-06-17T14:47:25.644968", "model": "gpt-4o", "prompt_tokens": 5532, "completion_tokens": 10, "total_tokens": 5542}
+{"timestamp": "2025-06-17T14:49:59.710741", "model": "gpt-4o", "prompt_tokens": 5455, "completion_tokens": 10, "total_tokens": 5465, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:50:04.134836", "model": "gpt-4o", "prompt_tokens": 5473, "completion_tokens": 11, "total_tokens": 5484, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:50:18.190956", "model": "gpt-4o", "prompt_tokens": 5492, "completion_tokens": 18, "total_tokens": 5510, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:51:43.910251", "model": "gpt-4o", "prompt_tokens": 5475, "completion_tokens": 14, "total_tokens": 5489, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:51:59.674362", "model": "gpt-4o", "prompt_tokens": 5504, "completion_tokens": 59, "total_tokens": 5563, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:53:53.949912", "model": "gpt-4o", "prompt_tokens": 5475, "completion_tokens": 14, "total_tokens": 5489, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:53:56.221260", "model": "gpt-4o", "prompt_tokens": 5497, "completion_tokens": 11, "total_tokens": 5508, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:54:03.351543", "model": "gpt-4o", "prompt_tokens": 5518, "completion_tokens": 26, "total_tokens": 5544, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:55:30.387424", "model": "gpt-4o", "prompt_tokens": 5475, "completion_tokens": 14, "total_tokens": 5489, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:55:40.807863", "model": "gpt-4o", "prompt_tokens": 5503, "completion_tokens": 24, "total_tokens": 5527, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:55:43.922771", "model": "gpt-4o", "prompt_tokens": 212, "completion_tokens": 113, "total_tokens": 325, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:56:20.435025", "model": "gpt-4o", "prompt_tokens": 5764, "completion_tokens": 11, "total_tokens": 5775, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:59:22.605817", "model": "gpt-4o", "prompt_tokens": 5783, "completion_tokens": 10, "total_tokens": 5793, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:59:34.728062", "model": "gpt-4o", "prompt_tokens": 5807, "completion_tokens": 21, "total_tokens": 5828, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T14:59:42.006852", "model": "gpt-4o", "prompt_tokens": 1143, "completion_tokens": 469, "total_tokens": 1612, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:00:05.184434", "model": "gpt-4o", "prompt_tokens": 6762, "completion_tokens": 40, "total_tokens": 6802, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:00:17.540551", "model": "gpt-4o", "prompt_tokens": 6810, "completion_tokens": 31, "total_tokens": 6841, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:01:44.697057", "model": "gpt-4o", "prompt_tokens": 5470, "completion_tokens": 35, "total_tokens": 5505, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:01:58.620110", "model": "gpt-4o", "prompt_tokens": 5470, "completion_tokens": 33, "total_tokens": 5503, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:02:05.815213", "model": "gpt-4o", "prompt_tokens": 5470, "completion_tokens": 31, "total_tokens": 5501, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:02:20.953284", "model": "gpt-4o", "prompt_tokens": 5470, "completion_tokens": 14, "total_tokens": 5484, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:02:31.658683", "model": "gpt-4o", "prompt_tokens": 5470, "completion_tokens": 33, "total_tokens": 5503, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:03:49.583715", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 14, "total_tokens": 5599, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:03:55.288096", "model": "gpt-4o", "prompt_tokens": 5613, "completion_tokens": 15, "total_tokens": 5628, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:03:57.657129", "model": "gpt-4o", "prompt_tokens": 293, "completion_tokens": 65, "total_tokens": 358, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:04:03.100395", "model": "gpt-4o", "prompt_tokens": 5804, "completion_tokens": 20, "total_tokens": 5824, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:04:05.469993", "model": "gpt-4o", "prompt_tokens": 527, "completion_tokens": 47, "total_tokens": 574, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:04:24.565569", "model": "gpt-4o", "prompt_tokens": 5869, "completion_tokens": 10, "total_tokens": 5879, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:04:41.354255", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 37, "total_tokens": 5622, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:04:45.585057", "model": "gpt-4o", "prompt_tokens": 5637, "completion_tokens": 16, "total_tokens": 5653, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:04:48.788455", "model": "gpt-4o", "prompt_tokens": 319, "completion_tokens": 67, "total_tokens": 386, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:06:21.789897", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 34, "total_tokens": 5619, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:06:28.536238", "model": "gpt-4o", "prompt_tokens": 5634, "completion_tokens": 16, "total_tokens": 5650, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:06:30.883536", "model": "gpt-4o", "prompt_tokens": 316, "completion_tokens": 48, "total_tokens": 364, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:09:11.707018", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 33, "total_tokens": 5618, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:10:44.545843", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 14, "total_tokens": 5599, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:11:53.460916", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 42, "total_tokens": 5627, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:12:05.304886", "model": "gpt-4o", "prompt_tokens": 5589, "completion_tokens": 11, "total_tokens": 5600, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:12:07.482739", "model": "gpt-4o", "prompt_tokens": 149, "completion_tokens": 44, "total_tokens": 193, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:12:15.145315", "model": "gpt-4o", "prompt_tokens": 5591, "completion_tokens": 15, "total_tokens": 5606, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:12:17.297705", "model": "gpt-4o", "prompt_tokens": 149, "completion_tokens": 37, "total_tokens": 186, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:17:24.310810", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 36, "total_tokens": 5621, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:17:55.024456", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 16, "total_tokens": 5601, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:18:04.656280", "model": "gpt-4o", "prompt_tokens": 5593, "completion_tokens": 21, "total_tokens": 5614, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:18:54.738427", "model": "gpt-4o", "prompt_tokens": 5580, "completion_tokens": 33, "total_tokens": 5613, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:19:02.113330", "model": "gpt-4o", "prompt_tokens": 5580, "completion_tokens": 44, "total_tokens": 5624, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:19:45.690536", "model": "gpt-4o", "prompt_tokens": 5580, "completion_tokens": 45, "total_tokens": 5625, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:19:51.105598", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 14, "total_tokens": 5599, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:19:55.999156", "model": "gpt-4o", "prompt_tokens": 5612, "completion_tokens": 24, "total_tokens": 5636, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:20:09.894150", "model": "gpt-4o", "prompt_tokens": 5649, "completion_tokens": 27, "total_tokens": 5676, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:20:15.778079", "model": "gpt-4o", "prompt_tokens": 5689, "completion_tokens": 16, "total_tokens": 5705, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:20:18.260183", "model": "gpt-4o", "prompt_tokens": 371, "completion_tokens": 45, "total_tokens": 416, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:20:26.229237", "model": "gpt-4o", "prompt_tokens": 5861, "completion_tokens": 24, "total_tokens": 5885, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:20:28.692212", "model": "gpt-4o", "prompt_tokens": 567, "completion_tokens": 105, "total_tokens": 672, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:20:56.400397", "model": "gpt-4o", "prompt_tokens": 6111, "completion_tokens": 15, "total_tokens": 6126, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:21:03.030583", "model": "gpt-4o", "prompt_tokens": 6139, "completion_tokens": 15, "total_tokens": 6154, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:21:11.151003", "model": "gpt-4o", "prompt_tokens": 5590, "completion_tokens": 23, "total_tokens": 5613, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:21:15.526220", "model": "gpt-4o", "prompt_tokens": 5621, "completion_tokens": 14, "total_tokens": 5635, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:21:24.235317", "model": "gpt-4o", "prompt_tokens": 5649, "completion_tokens": 36, "total_tokens": 5685, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:21:27.721084", "model": "gpt-4o", "prompt_tokens": 5693, "completion_tokens": 15, "total_tokens": 5708, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:21:29.939535", "model": "gpt-4o", "prompt_tokens": 5716, "completion_tokens": 14, "total_tokens": 5730, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:21:35.910731", "model": "gpt-4o", "prompt_tokens": 5744, "completion_tokens": 27, "total_tokens": 5771, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:22:29.622399", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 14, "total_tokens": 5599, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:22:34.603873", "model": "gpt-4o", "prompt_tokens": 5613, "completion_tokens": 15, "total_tokens": 5628, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:22:41.441424", "model": "gpt-4o", "prompt_tokens": 5640, "completion_tokens": 24, "total_tokens": 5664, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:22:48.298016", "model": "gpt-4o", "prompt_tokens": 5667, "completion_tokens": 19, "total_tokens": 5686, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:22:57.951788", "model": "gpt-4o", "prompt_tokens": 5703, "completion_tokens": 17, "total_tokens": 5720, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:24:39.649689", "model": "gpt-4o", "prompt_tokens": 5604, "completion_tokens": 64, "total_tokens": 5668, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:26:24.395878", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 35, "total_tokens": 5620, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:26:31.237422", "model": "gpt-4o", "prompt_tokens": 5637, "completion_tokens": 24, "total_tokens": 5661, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:26:35.248170", "model": "gpt-4o", "prompt_tokens": 344, "completion_tokens": 109, "total_tokens": 453, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:26:41.792200", "model": "gpt-4o", "prompt_tokens": 5907, "completion_tokens": 63, "total_tokens": 5970, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:26:46.830499", "model": "gpt-4o", "prompt_tokens": 678, "completion_tokens": 163, "total_tokens": 841, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:28:26.736514", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 14, "total_tokens": 5599, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:28:29.437307", "model": "gpt-4o", "prompt_tokens": 5612, "completion_tokens": 23, "total_tokens": 5635, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:28:32.612384", "model": "gpt-4o", "prompt_tokens": 313, "completion_tokens": 111, "total_tokens": 424, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:28:40.645886", "model": "gpt-4o", "prompt_tokens": 5872, "completion_tokens": 63, "total_tokens": 5935, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:28:44.485124", "model": "gpt-4o", "prompt_tokens": 639, "completion_tokens": 173, "total_tokens": 812, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:29:33.487964", "model": "gpt-4o", "prompt_tokens": 5585, "completion_tokens": 35, "total_tokens": 5620, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:29:42.916516", "model": "gpt-4o", "prompt_tokens": 5639, "completion_tokens": 63, "total_tokens": 5702, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:29:45.454498", "model": "gpt-4o", "prompt_tokens": 516, "completion_tokens": 124, "total_tokens": 640, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:30:56.135332", "model": "gpt-4o", "prompt_tokens": 6094, "completion_tokens": 125, "total_tokens": 6219, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T15:31:04.146373", "model": "gpt-4o", "prompt_tokens": 2197, "completion_tokens": 244, "total_tokens": 2441, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T17:38:00.473758", "model": "gpt-4o", "prompt_tokens": 7880, "completion_tokens": 19, "total_tokens": 7899, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T17:38:17.395730", "model": "gpt-4o", "prompt_tokens": 7918, "completion_tokens": 83, "total_tokens": 8001, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T17:38:39.547110", "model": "gpt-4o", "prompt_tokens": 8027, "completion_tokens": 56, "total_tokens": 8083, "note": "These are the actual tokens counted by OpenAI's API"}
+{"timestamp": "2025-06-17T17:38:46.408208", "model": "gpt-4o", "prompt_tokens": 4126, "completion_tokens": 238, "total_tokens": 4364, "note": "These are the actual tokens counted by OpenAI's API"}
+2025-06-17 17:58:50,095 - mcp.client.sse - INFO - Connecting to SSE endpoint: http://localhost:8exitexit000/sse
+2025-06-17 17:59:01,542 - mcp.client.sse - INFO - Connecting to SSE endpoint: http://localhost:8000/sse
+2025-06-17 17:59:01,563 - httpx - INFO - HTTP Request: GET http://localhost:8000/sse "HTTP/1.1 200 OK"
+2025-06-17 17:59:01,563 - mcp.client.sse - INFO - Received endpoint URL: http://localhost:8000/messages/?session_id=e34a679a8187448e84606b088d500b96
+2025-06-17 17:59:01,563 - mcp.client.sse - INFO - Starting post writer with endpoint URL: http://localhost:8000/messages/?session_id=e34a679a8187448e84606b088d500b96
+2025-06-17 17:59:01,566 - httpx - INFO - HTTP Request: POST http://localhost:8000/messages/?session_id=e34a679a8187448e84606b088d500b96 "HTTP/1.1 202 Accepted"
+2025-06-17 17:59:01,572 - chat.agent - INFO - Initialized ChatAgent with model: gpt-4o
+2025-06-17 17:59:03,967 - chat.agent - INFO - Processing persisted query
+2025-06-17 17:59:03,975 - httpx - INFO - HTTP Request: POST http://localhost:8000/messages/?session_id=e34a679a8187448e84606b088d500b96 "HTTP/1.1 202 Accepted"
+2025-06-17 17:59:03,979 - httpx - INFO - HTTP Request: POST http://localhost:8000/messages/?session_id=e34a679a8187448e84606b088d500b96 "HTTP/1.1 202 Accepted"
+2025-06-17 17:59:03,985 - chat.agent - INFO - Loaded 26 tool definitions
+2025-06-17 17:59:05,168 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 17:59:05,173 - chat.agent - INFO - Token usage: {"timestamp": "2025-06-17T17:59:05.173603", "prompt_tokens": 5475, "completion_tokens": 16, "total_tokens": 5491, "model": "gpt-4o"}
+2025-06-17 17:59:39,501 - __main__ - INFO - User requested exit
+2025-06-17 17:59:40,752 - mcp.client.sse - INFO - Connecting to SSE endpoint: http://localhost:8000/sse
+2025-06-17 17:59:40,770 - httpx - INFO - HTTP Request: GET http://localhost:8000/sse "HTTP/1.1 200 OK"
+2025-06-17 17:59:40,771 - mcp.client.sse - INFO - Received endpoint URL: http://localhost:8000/messages/?session_id=773822e2ef1d418e91fee67678e6c760
+2025-06-17 17:59:40,771 - mcp.client.sse - INFO - Starting post writer with endpoint URL: http://localhost:8000/messages/?session_id=773822e2ef1d418e91fee67678e6c760
+2025-06-17 17:59:40,773 - httpx - INFO - HTTP Request: POST http://localhost:8000/messages/?session_id=773822e2ef1d418e91fee67678e6c760 "HTTP/1.1 202 Accepted"
+2025-06-17 17:59:40,777 - chat.agent - INFO - Initialized ChatAgent with model: gpt-4o
+2025-06-17 17:59:42,475 - chat.agent - INFO - Processing persisted query
+2025-06-17 17:59:42,482 - httpx - INFO - HTTP Request: POST http://localhost:8000/messages/?session_id=773822e2ef1d418e91fee67678e6c760 "HTTP/1.1 202 Accepted"
+2025-06-17 17:59:42,485 - httpx - INFO - HTTP Request: POST http://localhost:8000/messages/?session_id=773822e2ef1d418e91fee67678e6c760 "HTTP/1.1 202 Accepted"
+2025-06-17 17:59:42,493 - chat.agent - INFO - Loaded 26 tool definitions
+2025-06-17 17:59:49,272 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-17 17:59:49,280 - chat.agent - INFO - Token usage: {"timestamp": "2025-06-17T17:59:49.280297", "prompt_tokens": 5475, "completion_tokens": 14, "total_tokens": 5489, "model": "gpt-4o"}
+2025-06-17 18:00:55,296 - __main__ - INFO - User requested exit
