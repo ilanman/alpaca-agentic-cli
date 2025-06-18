@@ -1,6 +1,6 @@
 # Alpaca Agentic Trading CLI
 
-A command-line agent that lets you interact with the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) using OpenAI-powered LLMs for true natural language, tool-augmented trading. Features include privacy-preserving disposable queries, per-request token usage reporting, and robust tool logging.
+A command-line agent that lets you interact with the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) using OpenAI-powered LLMs for true natural language, tool-augmented trading. Features include privacy-preserving disposable queries, per-request and cumulative token usage reporting, and robust tool logging.
 
 
 ---
@@ -11,7 +11,7 @@ This agentic CLI relies on the [Alpaca MCP server](https://github.com/alpacahq/a
 
 **To use this project, you must:**
 1. Clone and install the official [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server).
-2. Provide your own Alpaca API keys by following the [server’s setup instructions](https://github.com/alpacahq/alpaca-mcp-server#installation).
+2. Provide your own Alpaca API keys by following the [server's setup instructions](https://github.com/alpacahq/alpaca-mcp-server#installation).
 3. Start the MCP server (see the server README for full instructions).
 4. Use this CLI to connect (point the `MCP_SERVER_URL` in your `.env` to your running server).
 
@@ -84,9 +84,67 @@ This agentic CLI relies on the [Alpaca MCP server](https://github.com/alpacahq/a
 - **Natural language trading:** Chat with your account and request trades in plain English.
 - **OpenAI tool calling:** Leverages LLM-native function calling for robust, schema-driven trading commands.
 - **Disposable mode:** Prefix messages with `-d` to prevent history retention and reduce context cost.
-- **Per-prompt token logging:** See token count sent to OpenAI for each exchange.
-- **Tool call logging:** All MCP tool calls and arguments are printed to console for full auditability.
+- **Per-request and cumulative token usage reporting:** See OpenAI's official token count for each exchange and the running total for your session, both in the terminal and in `chat_agent.log`.
+- **Response source display:** The CLI clearly indicates whether a response was generated directly by the LLM or with tool assistance.
+- **Tool call logging:** All MCP tool calls and arguments are logged for full auditability.
 - **Error-handled tool loop:** Compliant with OpenAI tool call protocol (no 400 errors).
+- **Session memory:** The LLM maintains context by including the full conversation history in each API call.
+
+---
+
+## Example Usage
+
+After setup, start the CLI:
+
+```bash
+python main.py
+```
+
+You will see a prompt. Try the following:
+
+```
+> What's the current price of AAPL?
+
+[TOKEN USAGE]
+Current request (including full context history):
+  Prompt tokens: 45
+  Completion tokens: 20
+  Total tokens: 65
+
+Session totals (sum of all API calls):
+  Prompt tokens: 45
+  Completion tokens: 20
+  Total tokens: 65
+
+[RESPONSE SOURCE] Generated using LLM with tool assistance
+AAPL is currently trading at $172.34.
+```
+
+You can also place trades:
+
+```
+> Buy 1 share of TSLA
+
+[TOKEN USAGE]
+Current request (including full context history):
+  Prompt tokens: 90
+  Completion tokens: 30
+  Total tokens: 120
+
+Session totals (sum of all API calls):
+  Prompt tokens: 135
+  Completion tokens: 50
+  Total tokens: 185
+
+[RESPONSE SOURCE] Generated using LLM with tool assistance
+Order placed: Bought 1 share of TSLA at $700.00.
+```
+
+To use disposable mode (no history retained for that turn):
+
+```
+> -d What is my account balance?
+```
 
 ---
 
