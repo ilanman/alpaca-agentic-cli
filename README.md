@@ -1,19 +1,29 @@
-# Alpaca Agentic Trading CLI
+# finAI Trading Agent
 
-A command-line agent that lets you interact with the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) using OpenAI-powered LLMs for true natural language, tool-augmented trading. Features include privacy-preserving disposable queries, per-request and cumulative token usage reporting, and robust tool logging.
+A modern trading agent (called `Agent` in code) that lets you interact with the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) using natural language. **Powered by [LangChain](https://python.langchain.com/) under the hood for robust LLM orchestration and tool integration.** Features include enhanced tool calling, multiple data sources, streaming responses, and robust error handling.
 
+## 🚀 Features
+
+- **🤖 Agent Framework**: Modern agent framework (class name: `Agent`) for trading and research
+- **⚡ Powered by LangChain**: Uses LangChain under the hood for LLM orchestration, tool calling, and memory
+- **📊 Multiple Data Sources**: Alpaca MCP + yfinance + web search + Wikipedia
+- **💬 Natural Language Trading**: Chat with your account in plain English
+- **🔄 Streaming Responses**: Real-time response generation
+- **🧠 Conversation Memory**: Context-aware conversations
+- **🛠️ Enhanced Tool Calling**: Robust tool selection and error handling
+- **📈 Comprehensive Analysis**: Combine trading data with research and news
 
 ---
 
 ## Prerequisite: Alpaca MCP Server
 
-This agentic CLI relies on the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) as a backend for all trading operations.
+This agent relies on the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) as a backend for all trading operations.
 
 **To use this project, you must:**
 1. Clone and install the official [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server).
 2. Provide your own Alpaca API keys by following the [server's setup instructions](https://github.com/alpacahq/alpaca-mcp-server#installation).
 3. Start the MCP server (see the server README for full instructions).
-4. Use this CLI to connect (point the `MCP_SERVER_URL` in your `.env` to your running server).
+4. Use this agent to connect (point the `MCP_SERVER_URL` in your `.env` to your running server).
 
 *For server installation, configuration, and API key setup, always refer to the [Alpaca MCP server README](https://github.com/alpacahq/alpaca-mcp-server#installation).*
 
@@ -26,16 +36,20 @@ This agentic CLI relies on the [Alpaca MCP server](https://github.com/alpacahq/a
 - OpenAI API key
 - Alpaca API and Secret keys
 
-
 ---
 
 ## Python Dependencies
 
+- [langchain](https://pypi.org/project/langchain/) – Modern LLM framework
+- [langchain-openai](https://pypi.org/project/langchain-openai/) – OpenAI integration
+- [langchain-community](https://pypi.org/project/langchain-community/) – Community tools
 - [openai](https://pypi.org/project/openai/) – Chat/LLM API
 - [mcp](https://pypi.org/project/mcp/) – Model Context Protocol Python SDK
 - [python-dotenv](https://pypi.org/project/python-dotenv/) – Load config from .env files
-- [tiktoken](https://pypi.org/project/tiktoken/) – For token counting in prompt window
-- [pytest](https://pypi.org/project/pytest/) – For running tests
+- [yfinance](https://pypi.org/project/yfinance/) – Yahoo Finance data
+- [duckduckgo-search](https://pypi.org/project/duckduckgo-search/) – Web search
+- [wikipedia](https://pypi.org/project/wikipedia/) – Wikipedia data
+- [newsapi-python](https://pypi.org/project/newsapi-python/) – News data
 
 ---
 
@@ -43,8 +57,8 @@ This agentic CLI relies on the [Alpaca MCP server](https://github.com/alpacahq/a
 
 1. **Clone this repo:**
     ```bash
-    git clone https://github.com/your-username/alpaca-agentic-cli.git
-    cd alpaca-agentic-cli
+    git clone https://github.com/your-username/finAI.git
+    cd finAI
     ```
 
 2. **Create and activate a virtual environment:**
@@ -64,106 +78,95 @@ This agentic CLI relies on the [Alpaca MCP server](https://github.com/alpacahq/a
     ```
     Fill in your `OPENAI_API_KEY` and `MCP_SERVER_URL` (e.g. `http://localhost:8000`).
 
-5. **Install and start the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) in a separate terminal:**
+5. **Start the Alpaca MCP server in a separate terminal:**
     ```bash
-    git clone https://github.com/alpacahq/alpaca-mcp-server.git
+    # Use the provided script (recommended)
+    python start_alpaca_server.py
+    
+    # OR manually (if you prefer)
     cd alpaca-mcp-server
-    pip install -e .
     python alpaca_mcp_server.py
     ```
+    
+    *Note: The `alpaca-mcp-server` directory should already exist in this project. If it doesn't, you'll need to clone it from [Alpaca's repository](https://github.com/alpacahq/alpaca-mcp-server) and set up your API keys according to their instructions.*
 
-6. **Run the CLI:**
+6. **Run the agent:**
     ```bash
     python main.py
     ```
 
 ---
 
-## Features & Customizations
-
-- **Natural language trading:** Chat with your account and request trades in plain English.
-- **OpenAI tool calling:** Leverages LLM-native function calling for robust, schema-driven trading commands.
-- **Disposable mode:** Prefix messages with `-d` to prevent history retention and reduce context cost.
-- **Per-request and cumulative token usage reporting:** See OpenAI's official token count for each exchange and the running total for your session, both in the terminal and in `chat_agent.log`.
-- **Response source display:** The CLI clearly indicates whether a response was generated directly by the LLM or with tool assistance.
-- **Tool call logging:** All MCP tool calls and arguments are logged for full auditability.
-- **Error-handled tool loop:** Compliant with OpenAI tool call protocol (no 400 errors).
-- **Session memory:** The LLM maintains context by including the full conversation history in each API call.
-
----
-
 ## Example Usage
 
-After setup, start the CLI:
+After setup, start the agent:
 
 ```bash
 python main.py
 ```
 
-You will see a prompt. Try the following:
+You will see the agent initialize with available tools. Try these examples:
 
+### Basic Trading
 ```
-> What's the current price of AAPL?
-
-[TOKEN USAGE]
-Current request (including full context history):
-  Prompt tokens: 45
-  Completion tokens: 20
-  Total tokens: 65
-
-Session totals (sum of all API calls):
-  Prompt tokens: 45
-  Completion tokens: 20
-  Total tokens: 65
-
-[RESPONSE SOURCE] Generated using LLM with tool assistance
-AAPL is currently trading at $172.34.
-```
-
-You can also place trades:
-
-```
+> What's my current account balance?
+> Get the current price of AAPL
 > Buy 1 share of TSLA
-
-[TOKEN USAGE]
-Current request (including full context history):
-  Prompt tokens: 90
-  Completion tokens: 30
-  Total tokens: 120
-
-Session totals (sum of all API calls):
-  Prompt tokens: 135
-  Completion tokens: 50
-  Total tokens: 185
-
-[RESPONSE SOURCE] Generated using LLM with tool assistance
-Order placed: Bought 1 share of TSLA at $700.00.
+> Show me my current positions
 ```
 
-To use disposable mode (no history retained for that turn):
-
+### Research & Analysis
 ```
-> -d What is my account balance?
+> Search for recent news about Tesla
+> What is Tesla's P/E ratio?
+> Tell me about Apple's business model
+> Get technical indicators for AAPL
+```
+
+### Comprehensive Analysis
+```
+> Analyze AAPL comprehensively: get current price, recent news, and P/E ratio
+> Compare Tesla and Apple's financial metrics
+> What's the market sentiment around AI stocks?
+```
+
+### Testing
+Run the test suite to verify functionality:
+```bash
+python main.py --test
 ```
 
 ---
 
-## How This Differs from Stock MCP
+## Available Tools
 
-- Does not modify MCP server code.
-- All customizations are in the CLI agent and OpenAI integration.
-- Disposable/persistent chat history management for privacy and cost control.
-- Token and tool call logging for transparency.
+### Trading Tools (MCP)
+- Account information and balances
+- Real-time stock quotes and market data
+- Order placement and management
+- Position tracking and management
+- Options trading
+- Watchlist management
+
+### Research Tools (External)
+- **Web Search**: DuckDuckGo for real-time information
+- **Financial Data**: yfinance for P/E ratios, earnings, dividends
+- **Company Info**: Wikipedia for business models and background
+- **News**: NewsAPI for market sentiment and developments
 
 ---
 
-## Contributing
+## Architecture
 
-PRs and forks welcome!  
-See `chat/agent.py` for how to add features or modify disposable logic.
-
----
-
-## License
-
-MIT
+```
+┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│   Agent      │    │   Alpaca MCP  │    │   External    │
+│              │◄──►│   Server      │    │   APIs        │
+│              │    │               │    │               │
+└───────────────┘    └───────────────┘    └───────────────┘
+     │                       │                       │
+     ▼                       ▼                       ▼
+┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│ Conversation  │    │   Trading     │    │   Research    │
+│ Memory        │    │   Operations  │    │   Data        │
+```
