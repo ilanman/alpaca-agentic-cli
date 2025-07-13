@@ -1,10 +1,11 @@
 # finAI Trading Agent
 
-A modern, LangChain-powered trading agent that lets you interact with the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) using natural language. Features include enhanced tool calling, multiple data sources, streaming responses, and robust error handling.
+A modern trading agent (called `Agent` in code) that lets you interact with the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) using natural language. **Powered by [LangChain](https://python.langchain.com/) under the hood for robust LLM orchestration and tool integration.** Features include enhanced tool calling, multiple data sources, streaming responses, and robust error handling.
 
 ## 🚀 Features
 
-- **🤖 LangChain Integration**: Modern agent framework with enhanced capabilities
+- **🤖 Agent Framework**: Modern agent framework (class name: `Agent`) for trading and research
+- **⚡ Powered by LangChain**: Uses LangChain under the hood for LLM orchestration, tool calling, and memory
 - **📊 Multiple Data Sources**: Alpaca MCP + yfinance + web search + Wikipedia
 - **💬 Natural Language Trading**: Chat with your account in plain English
 - **🔄 Streaming Responses**: Real-time response generation
@@ -77,13 +78,17 @@ This agent relies on the [Alpaca MCP server](https://github.com/alpacahq/alpaca-
     ```
     Fill in your `OPENAI_API_KEY` and `MCP_SERVER_URL` (e.g. `http://localhost:8000`).
 
-5. **Install and start the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) in a separate terminal:**
+5. **Start the Alpaca MCP server in a separate terminal:**
     ```bash
-    git clone https://github.com/alpacahq/alpaca-mcp-server.git
+    # Use the provided script (recommended)
+    python start_alpaca_server.py
+    
+    # OR manually (if you prefer)
     cd alpaca-mcp-server
-    pip install -r requirements.txt
     python alpaca_mcp_server.py
     ```
+    
+    *Note: The `alpaca-mcp-server` directory should already exist in this project. If it doesn't, you'll need to clone it from [Alpaca's repository](https://github.com/alpacahq/alpaca-mcp-server) and set up your API keys according to their instructions.*
 
 6. **Run the agent:**
     ```bash
@@ -154,28 +159,14 @@ python main.py --test
 ## Architecture
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   LangChain     │    │   Alpaca MCP    │    │   External      │
-│   Agent         │◄──►│   Server        │    │   APIs          │
-│                 │    │                 │    │                 │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Conversation  │    │   Trading       │    │   Research      │
-│   Memory        │    │   Operations    │    │   Data          │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│   Agent      │    │   Alpaca MCP  │    │   External    │
+│              │◄──►│   Server      │    │   APIs        │
+│              │    │               │    │               │
+└───────────────┘    └───────────────┘    └───────────────┘
+     │                       │                       │
+     ▼                       ▼                       ▼
+┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│ Conversation  │    │   Trading     │    │   Research    │
+│ Memory        │    │   Operations  │    │   Data        │
 ```
-
----
-
-## Contributing
-
-PRs and forks welcome!  
-See `langchain_agent.py` for how to add new tools or modify agent behavior.
-
----
-
-## License
-
-MIT
