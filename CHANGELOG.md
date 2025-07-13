@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - LangChain integration with enhanced tool calling framework
 - New `LangChainTradingAgent` class with improved capabilities
 - External data source integration (yfinance, DuckDuckGo search, Wikipedia)
-- Enhanced main entry point (`main_langchain.py`) with agent selection
+- Enhanced main entry point with simplified interface
 - Tool comparison and testing functionality
 - Comprehensive CHANGELOG system for tracking changes
 - MCP tool wrapper for LangChain compatibility
@@ -23,12 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated requirements.txt with LangChain dependencies
 - Enhanced system prompts for better tool selection
 - Improved tool descriptions for conflict resolution
-
-### Deprecated
-- N/A
+- Simplified main.py to use only LangChain agent
+- Updated README to reflect new LangChain-based architecture
 
 ### Removed
-- N/A
+- Original `ChatAgent` class (replaced by LangChain agent)
+- Disposable query mode (handled by LangChain memory management)
+- Manual token tracking (handled by LangChain framework)
+- Complex tool calling logic (simplified with LangChain)
 
 ### Fixed
 - N/A
