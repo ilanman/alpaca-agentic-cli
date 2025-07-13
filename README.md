@@ -1,5 +1,14 @@
 # finAI Trading Agent
 
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Development Status](https://img.shields.io/badge/status-development-orange.svg)](https://github.com/yourusername/finAI)
+[![LangChain](https://img.shields.io/badge/LangChain-0.3.0+-blue.svg)](https://python.langchain.com/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-1.0.0+-green.svg)](https://openai.com/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Linting: flake8](https://img.shields.io/badge/linting-flake8-yellowgreen.svg)](https://flake8.pycqa.org/)
+[![Type checking: mypy](https://img.shields.io/badge/type%20checking-mypy-blue.svg)](https://mypy.readthedocs.io/)
+
 A modern trading agent (called `Agent` in code) that lets you interact with the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) using natural language. **Powered by [LangChain](https://python.langchain.com/) under the hood for robust LLM orchestration and tool integration.** Features include enhanced tool calling, multiple data sources, streaming responses, and robust error handling.
 
 ## 🚀 Features
