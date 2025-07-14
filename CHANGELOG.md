@@ -20,23 +20,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Better error handling and retry logic
 
 ### Changed
-- Updated requirements.txt with LangChain dependencies
-- Enhanced system prompts for better tool selection
-- Improved tool descriptions for conflict resolution
-- Simplified main.py to use only LangChain agent
-- Updated README to reflect new LangChain-based architecture
+- Upgraded agent to use LangChain’s event streaming API for true streaming of LLM and tool output.
+- CLI now only shows assistant output, with no extra labels or prefixes, for a cleaner experience.
+- Improved error handling and user feedback for failed trades and tool errors.
+- Clarified trade status messages (e.g., “Trade request made. Awaiting response...”).
+- Cleaned up code: removed unused debugging, test artifacts, and streaming flag logic.
 
 ### Removed
-- Original `ChatAgent` class (replaced by LangChain agent)
-- Disposable query mode (handled by LangChain memory management)
-- Manual token tracking (handled by LangChain framework)
-- Complex tool calling logic (simplified with LangChain)
+- Output labeling such as `[TOOL OUTPUT]` and `[ASSISTANT]` from CLI.
+- Manual streaming flag and related CLI/test code.
 
 ### Fixed
 - N/A
 
 ### Security
 - N/A
+
+## [Unreleased]
+- Streaming output is now always enabled; only the assistant's output is shown in the CLI (no [TOOL OUTPUT] or [ASSISTANT] labels, no raw tool output).
+- Trade confirmation step added: users must confirm trades before execution, with a clear prompt and live price lookup.
+- Improved error handling and output clarity for failed trades and tool responses.
+- Codebase cleanup: removed unused code, debugging statements, and test artifacts; refactored for maintainability.
+- Added basic unit tests for MCPToolWrapper, covering parameter validation and trade confirmation logic.
 
 ## [0.1.0] - 2024-07-13
 

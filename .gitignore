@@ -1,3 +1,5 @@
+alpaca-mcp-server/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -75,6 +77,3 @@ ENV/
 # Logs
 *.log
 langchain_agent.log
-
-# Remove config.py if present
-config.py

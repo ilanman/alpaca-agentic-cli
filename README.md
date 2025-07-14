@@ -5,9 +5,6 @@
 [![Development Status](https://img.shields.io/badge/status-development-orange.svg)](https://github.com/yourusername/finAI)
 [![LangChain](https://img.shields.io/badge/LangChain-0.3.0+-blue.svg)](https://python.langchain.com/)
 [![OpenAI](https://img.shields.io/badge/OpenAI-1.0.0+-green.svg)](https://openai.com/)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Linting: flake8](https://img.shields.io/badge/linting-flake8-yellowgreen.svg)](https://flake8.pycqa.org/)
-[![Type checking: mypy](https://img.shields.io/badge/type%20checking-mypy-blue.svg)](https://mypy.readthedocs.io/)
 
 A modern trading agent (called `Agent` in code) that lets you interact with the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) using natural language. **Powered by [LangChain](https://python.langchain.com/) under the hood for robust LLM orchestration and tool integration.** Features include enhanced tool calling, multiple data sources, streaming responses, and robust error handling.
 
@@ -17,7 +14,7 @@ A modern trading agent (called `Agent` in code) that lets you interact with the 
 - **⚡ Powered by LangChain**: Uses LangChain under the hood for LLM orchestration, tool calling, and memory
 - **📊 Multiple Data Sources**: Alpaca MCP + yfinance + web search + Wikipedia
 - **💬 Natural Language Trading**: Chat with your account in plain English
-- **🔄 Streaming Responses**: Real-time response generation
+- **🔄 Streaming Responses**: Real-time, incremental output for a clean CLI experience
 - **🧠 Conversation Memory**: Context-aware conversations
 - **🛠️ Enhanced Tool Calling**: Robust tool selection and error handling
 - **📈 Comprehensive Analysis**: Combine trading data with research and news

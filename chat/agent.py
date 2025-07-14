@@ -11,28 +11,13 @@ Author: finAI Team
 License: MIT
 """
 
-import asyncio
 import logging
-import warnings
 from typing import List, Dict, Any, Optional
-from dataclasses import dataclass
 from pathlib import Path
+import sys
 
-# Suppress LangChain deprecation warnings
-warnings.filterwarnings(
-    "ignore", category=DeprecationWarning, module="langchain.memory"
-)
-warnings.filterwarnings("ignore", message=".*migrating_memory.*")
 
-# Import the specific warning class to filter it
-try:
-    from langchain_core._api.deprecation import LangChainDeprecationWarning
-
-    warnings.filterwarnings("ignore", category=LangChainDeprecationWarning)
-except ImportError:
-    pass
-
-import yfinance as yf
+import yfinance as yf  # type: ignore
 
 from langchain.agents import AgentExecutor, create_openai_functions_agent
 from langchain.tools import BaseTool
@@ -61,15 +46,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-@dataclass
-class ToolResult:
-    """Standardized result format for all tools."""
-
-    content: str
-    success: bool
-    error: Optional[str] = None
-
-
 class MCPToolWrapper(BaseTool):
     """Wrapper to make MCP tools compatible with LangChain."""
 
@@ -95,11 +71,56 @@ class MCPToolWrapper(BaseTool):
                 if validation_result:
                     return validation_result
 
+                # Only confirm if running in an interactive session
+                if sys.stdin.isatty():
+                    confirmed = await self._confirm_trade(kwargs)
+                    if not confirmed:
+                        print("Trade cancelled.")
+                        return "Trade cancelled by user."
+
+            print(
+                "Trade request made. Awaiting response. This may take a few seconds..."
+            )
             result = await self.mcp_client.call_tool(self.tool_name, kwargs)
             return str(result.content)
         except Exception as e:
             logger.error(f"Error calling MCP tool {self.tool_name}: {str(e)}")
             return f"Error calling {self.tool_name}: {str(e)}"
+
+    async def _confirm_trade(self, kwargs: Dict[str, Any]) -> bool:
+        """Ask the user to confirm the trade, showing details and live price."""
+        symbol = kwargs.get("symbol")
+        if not symbol:
+            print("Error: Symbol is required for trade confirmation.")
+            return False
+        side = kwargs.get("side")
+        quantity = kwargs.get("quantity")
+        # Fetch current price using yfinance
+        try:
+            stock = yf.Ticker(symbol)
+            info = stock.info
+            price = info.get("currentPrice", "N/A")
+        except Exception:
+            price = "N/A"
+        print("\n=== Trade Confirmation ===")
+        print(
+            f"You are about to {side} {quantity} shares of {symbol.upper()} at ${price} per share."
+        )
+        if price == "N/A" or quantity is None:
+            total = "N/A"
+        else:
+            try:
+                total = str(round(float(price) * float(quantity), 2))
+            except Exception:
+                total = "N/A"
+        print(f"Total: ${total}")
+        print(
+            "Do you want to proceed? [yes/y/confirm]: \nAny other key will cancel the trade.",
+            end="",
+            flush=True,
+        )
+        resp = input().strip().lower()
+        return resp in ("y", "yes", "confirm")
 
     def _validate_stock_order_params(self, kwargs: Dict[str, Any]) -> Optional[str]:
         """Validate stock order parameters."""
@@ -187,7 +208,9 @@ class Agent:
     def __init__(self, mcp_client: AlpacaMCPClient, model: str = DEFAULT_MODEL):
         self.mcp_client = mcp_client
         self.model = model
-        self.llm = ChatOpenAI(model=model, temperature=DEFAULT_TEMPERATURE)
+        self.llm = ChatOpenAI(
+            model=model, temperature=DEFAULT_TEMPERATURE, model_kwargs={"stream": True}
+        )
         self.memory = ConversationBufferWindowMemory(
             k=MEMORY_WINDOW_SIZE, return_messages=True, memory_key="history"
         )
@@ -356,22 +379,35 @@ For trading decisions, explain your reasoning and any risks involved."""
             return error_msg
 
     async def chat_stream(self, message: str):
-        """Streaming version: yields each chunk as it arrives."""
+        """Streaming version: yields only LLM/assistant output, with no extra labels or prefixes."""
         if not self.agent_executor:
             yield "Error: Agent not properly initialized"
             return
 
         try:
             logger.info(f"Processing message (streaming): {message[:100]}...")
-            async for chunk in self.agent_executor.astream({"input": message}):
-                if "output" in chunk:
-                    yield chunk["output"]
+            async for event in self.agent_executor.astream_events(
+                {"input": message}, version="v1"
+            ):
+                for ev in self._flatten_events(event):
+                    try:
+                        if isinstance(ev, dict):
+                            event_type = ev.get("event", "")
+                            if event_type != "on_chat_model_stream":
+                                continue  # Only yield LLM output events
+                        else:
+                            continue  # Skip non-dict events
+                        content = _extract_content(ev)
+                        if content:
+                            yield str(content)
+                    except Exception:
+                        continue
         except Exception as e:
             error_msg = f"Error in LangChain agent: {str(e)}"
             logger.error(error_msg)
             yield error_msg
 
-    def get_tool_info(self) -> Dict[str, Any]:
+    def get_tool_info(self) -> dict:
         """Get information about available tools."""
         return {
             "mcp_tools": len([t for t in self.tools if isinstance(t, MCPToolWrapper)]),
@@ -382,51 +418,38 @@ For trading decisions, explain your reasoning and any risks involved."""
             "tool_names": [t.name for t in self.tools],
         }
 
-
-async def test_langchain_agent():
-    """Test the LangChain agent with sample queries."""
-    async with AlpacaMCPClient("http://localhost:8000") as mcp:
-        try:
-            agent = await Agent.create(mcp)
-
-            test_queries = [
-                "What's my current account balance?",
-                "Get the current price of AAPL using yfinance",
-                "Search the web for information about Apple's latest earnings",
-                "Get Tesla's P/E ratio and market cap using yfinance",
-                "What is the current market sentiment for TSLA?",
-            ]
-
-            print("=== LangChain Agent Test ===\n")
-            print(
-                f"✅ Loaded {agent.get_tool_info()['total_tools']} tools ({agent.get_tool_info()['mcp_tools']} MCP + {agent.get_tool_info()['external_tools']} external)\n"
-            )
-
-            for i, query in enumerate(test_queries, 1):
-                print(f"🔍 Test {i}: {query}")
-                print("-" * 60)
-
-                try:
-                    response = await agent.chat(query)
-                    # Clean up the response
-                    if "Response:" in response:
-                        response = response.split("Response:")[-1].strip()
-                    if "> Finished chain." in response:
-                        response = response.split("> Finished chain.")[0].strip()
-
-                    # Truncate very long responses
-                    if len(response) > 500:
-                        response = response[:500] + "..."
-
-                    print(f"✅ Result: {response}")
-                except Exception as e:
-                    print(f"❌ Error: {str(e)}")
-
-                print("\n" + "=" * 60 + "\n")
-        finally:
-            if hasattr(agent, "mcp_client"):
-                await agent.mcp_client.__aexit__(None, None, None)
+    def _flatten_events(self, event):
+        if isinstance(event, dict):
+            yield event
+        elif isinstance(event, list):
+            for item in event:
+                yield from self._flatten_events(item)
 
 
-if __name__ == "__main__":
-    asyncio.run(test_langchain_agent())
+def _extract_content(ev):
+    # Handle dicts
+    if isinstance(ev, dict):
+        data = ev.get("data", {})
+        # If 'chunk' is present, it could be a dict or a custom object
+        chunk = data.get("chunk")
+        if isinstance(chunk, str):
+            return chunk
+        elif hasattr(chunk, "content"):
+            return getattr(chunk, "content", "")
+        # Sometimes the output is in 'output'
+        output = data.get("output")
+        if isinstance(output, str):
+            return output
+        elif hasattr(output, "content"):
+            return getattr(output, "content", "")
+        # Sometimes the output is in 'return_values'
+        if "return_values" in data:
+            output = data["return_values"].get("output")
+            if output:
+                return output
+    # Handle AIMessageChunk and AgentFinish directly
+    elif hasattr(ev, "content"):
+        return getattr(ev, "content", "")
+    elif hasattr(ev, "return_values"):
+        return ev.return_values.get("output", "")
+    return None

@@ -16,17 +16,12 @@ License: MIT
 import asyncio
 import os
 import argparse
-import warnings
 import sys
 
 from dotenv import load_dotenv
 from chat.mcp_client import AlpacaMCPClient
 from chat.agent import Agent
 
-# Suppress ResourceWarnings about unclosed transports
-warnings.filterwarnings(
-    "ignore", category=ResourceWarning, message="unclosed transport"
-)
 
 # Configuration constants
 DEFAULT_SERVER_URL = "http://localhost:8000"
@@ -62,7 +57,6 @@ async def run_langchain_agent() -> None:
                     user = input("You: ").strip()
                     if user.lower() in {"exit", "quit"}:
                         break
-
                     async for chunk in agent.chat_stream(user):
                         print(chunk, end="", flush=True)
                     print("\n")
@@ -117,6 +111,7 @@ def main() -> None:
         action="store_true",
         help="Run test queries to verify functionality",
     )
+    # Remove --llm-stream-test argument
 
     args = parser.parse_args()
 
