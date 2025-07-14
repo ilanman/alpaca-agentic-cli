@@ -1,5 +1,5 @@
 """
-LangChain Trading Agent
+Trading Agent
 
 A comprehensive AI trading assistant that combines:
 - Real-time trading capabilities via Alpaca MCP
@@ -29,6 +29,7 @@ from langchain_community.tools import DuckDuckGoSearchRun, ArxivQueryRun
 from langchain_community.tools.reddit_search.tool import RedditSearchRun
 
 from chat.mcp_client import AlpacaMCPClient
+from chat.backtest_agent import BacktestTool, ListStrategiesTool
 
 # Configuration constants
 DEFAULT_MODEL = "gpt-4o"
@@ -288,6 +289,8 @@ class Agent:
                 AskNewsSearch(),
                 ArxivQueryRun(),
                 RedditSearchRun(),
+                BacktestTool(),
+                ListStrategiesTool(),
             ]
             self.tools.extend(external_tools)
             logger.info("Successfully loaded external tools")
@@ -347,7 +350,8 @@ class Agent:
 2. **Financial Data Tools**: yfinance (stock quotes, P/E ratios, market cap), AskNews (financial news), Web search for market research
 3. **Research Tools**: ArXiv (academic papers, technical analysis, quantitative finance research)
 4. **Social Sentiment**: Reddit (community sentiment, stock discussions, market opinions)
-5. **Analysis Tools**: Technical indicators, fundamental data
+5. **Backtesting Tools**: Run historical strategy backtests with multiple strategies (SMA crossover, RSI, Bollinger Bands, Buy & Hold)
+6. **Analysis Tools**: Technical indicators, fundamental data
 
 When helping users:
 - Use trading tools for real-time data and trading actions
@@ -357,11 +361,14 @@ When helping users:
 - Use ArXiv for academic research, quantitative finance papers, and technical analysis
 - Use Reddit for community sentiment, stock discussions, and market opinions
 - Use web search for comprehensive market research
+- Use backtest tool to test trading strategies on historical data
+- Use list_strategies to show available backtesting strategies
 - Combine multiple sources for comprehensive analysis
 - Always consider risk management
 - Provide clear, actionable recommendations
 
-For trading decisions, explain your reasoning and any risks involved."""
+For trading decisions, explain your reasoning and any risks involved.
+For backtesting requests, specify the strategy, symbol, date range, and any strategy parameters."""
 
     async def chat(self, message: str) -> str:
         """Process a user message using LangChain agent (non-streaming)."""
