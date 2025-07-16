@@ -1,5 +1,5 @@
 """
-LangChain Trading Agent
+Trading Agent
 
 A comprehensive AI trading assistant that combines:
 - Real-time trading capabilities via Alpaca MCP
@@ -29,6 +29,12 @@ from langchain_community.tools import DuckDuckGoSearchRun, ArxivQueryRun
 from langchain_community.tools.reddit_search.tool import RedditSearchRun
 
 from chat.mcp_client import AlpacaMCPClient
+from chat.backtest_agent import (
+    BacktestTool,
+    ListStrategiesTool,
+    InputInstructionsTool,
+    CompareStrategiesTool,
+)
 
 # Configuration constants
 DEFAULT_MODEL = "gpt-4o"
@@ -83,6 +89,15 @@ class MCPToolWrapper(BaseTool):
             )
             result = await self.mcp_client.call_tool(self.tool_name, kwargs)
             return str(result.content)
+        except RuntimeError as e:
+            # Detect MCP session not initialized error and return user-friendly message
+            if "MCP session not initialized" in str(e):
+                return (
+                    "MCP server is not connected. "
+                    "Cannot execute trade or access MCP tools."
+                )
+            logger.error(f"Error calling MCP tool {self.tool_name}: {str(e)}")
+            return f"Error calling {self.tool_name}: {str(e)}"
         except Exception as e:
             logger.error(f"Error calling MCP tool {self.tool_name}: {str(e)}")
             return f"Error calling {self.tool_name}: {str(e)}"
@@ -212,6 +227,12 @@ class Agent:
             model=model, temperature=DEFAULT_TEMPERATURE, model_kwargs={"stream": True}
         )
         self.memory = ConversationBufferWindowMemory(
+            k=MEMORY_WINDOW_SIZE,
+            return_messages=True,
+            memory_key="history",
+            output_key="output",
+        )
+        self.memory = ConversationBufferWindowMemory(
             k=MEMORY_WINDOW_SIZE, return_messages=True, memory_key="history"
         )
         self.tools: List[BaseTool] = []
@@ -288,6 +309,10 @@ class Agent:
                 AskNewsSearch(),
                 ArxivQueryRun(),
                 RedditSearchRun(),
+                BacktestTool(),
+                ListStrategiesTool(),
+                InputInstructionsTool(),
+                CompareStrategiesTool(),
             ]
             self.tools.extend(external_tools)
             logger.info("Successfully loaded external tools")
@@ -341,13 +366,15 @@ class Agent:
 
     def _get_system_prompt(self) -> str:
         """Get the system prompt for the agent."""
-        return """You are an AI trading assistant with access to multiple data sources:
+        return """
+You are an AI trading assistant with access to multiple data sources:
 
 1. **Trading Tools (MCP)**: Real-time trading data, account management, order placement
 2. **Financial Data Tools**: yfinance (stock quotes, P/E ratios, market cap), AskNews (financial news), Web search for market research
 3. **Research Tools**: ArXiv (academic papers, technical analysis, quantitative finance research)
 4. **Social Sentiment**: Reddit (community sentiment, stock discussions, market opinions)
-5. **Analysis Tools**: Technical indicators, fundamental data
+5. **Backtesting Tools**: Run historical strategy backtests with multiple strategies (SMA crossover, RSI, Bollinger Bands, Buy & Hold)
+6. **Analysis Tools**: Technical indicators, fundamental data
 
 When helping users:
 - Use trading tools for real-time data and trading actions
@@ -357,11 +384,18 @@ When helping users:
 - Use ArXiv for academic research, quantitative finance papers, and technical analysis
 - Use Reddit for community sentiment, stock discussions, and market opinions
 - Use web search for comprehensive market research
+- Use backtest tool to test trading strategies on historical data
+- Use list_strategies to show available backtesting strategies
+- Use input_instructions to get detailed input formats for backtesting strategies
 - Combine multiple sources for comprehensive analysis
 - Always consider risk management
 - Provide clear, actionable recommendations
 
-For trading decisions, explain your reasoning and any risks involved."""
+**IMPORTANT:** For any user request mentioning a backtest, strategy name, or historical strategy test, ALWAYS call the backtest tool, even if parameters are missing or incomplete. The backtest tool will provide the user with the exact required format and a copy-pasteable example for each strategy. Do not respond with a conversational prompt for backtesting; let the tool handle all formatting and error messages.
+
+For trading decisions, explain your reasoning and any risks involved.
+For backtesting requests, specify the strategy, symbol, date range, and any strategy parameters, or let the backtest tool prompt the user for the correct format.
+"""
 
     async def chat(self, message: str) -> str:
         """Process a user message using LangChain agent (non-streaming)."""

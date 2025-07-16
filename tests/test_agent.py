@@ -78,3 +78,14 @@ async def test_confirm_trade_no(dummy_mcp_client, monkeypatch):
         {"symbol": "AAPL", "side": "buy", "quantity": 1}
     )
     assert confirmed is False
+
+
+@pytest.mark.asyncio
+async def test_input_instructions_tool():
+    from chat.backtest_agent import InputInstructionsTool
+
+    tool = InputInstructionsTool()
+    result = await tool._arun()
+    assert "input_instructions" in result
+    assert isinstance(result["input_instructions"], str)
+    assert len(result["input_instructions"]) > 0
