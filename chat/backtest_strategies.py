@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import yfinance as yf  # type: ignore
 import warnings
 
@@ -73,14 +73,14 @@ class SMAStrategy(BaseStrategy):
 
         # Generate signals using numpy where to avoid Series boolean ambiguity
         # Convert to numpy arrays to ensure no pandas Series boolean operations
-        sma_short = df["SMA_short"].values
-        sma_long = df["SMA_long"].values
+        sma_short: np.ndarray = df["SMA_short"].values
+        sma_long: np.ndarray = df["SMA_long"].values
 
         df["signal"] = np.where(
             sma_short > sma_long,
-            1,  # type: ignore[operator]
+            1,
             np.where(sma_short < sma_long, -1, 0),
-        )  # type: ignore[operator]
+        )
         df["position"] = df["signal"].diff()
 
         return df
@@ -133,11 +133,11 @@ class RSIStrategy(BaseStrategy):
 
         # Generate signals using numpy where to avoid Series boolean ambiguity
         # Convert to numpy arrays to ensure no pandas Series boolean operations
-        rsi_values = df["RSI"].values
+        rsi_values: np.ndarray = df["RSI"].values
 
-        cond1 = rsi_values < oversold  # type: ignore[operator]
-        cond2 = rsi_values > overbought  # type: ignore[operator]
-        df["signal"] = np.where(cond1, 1, np.where(cond2, -1, 0))  # type: ignore[operator]
+        cond1 = rsi_values < oversold
+        cond2 = rsi_values > overbought
+        df["signal"] = np.where(cond1, 1, np.where(cond2, -1, 0))
 
         df["position"] = df["signal"].diff()
 
@@ -214,7 +214,10 @@ class BollingerBandsStrategy(BaseStrategy):
         df["BB_middle"] = df["Close"].rolling(window=window).mean()
         bb_std = df["Close"].rolling(window=window).std()
 
-        # Ensure we're working with Series, not DataFrames
+        # Ensure bb_std is a Series (not DataFrame)
+        if isinstance(bb_std, pd.DataFrame):
+            bb_std = bb_std.iloc[:, 0]
+
         df["BB_upper"] = df["BB_middle"] + (bb_std * float(num_std))
         df["BB_lower"] = df["BB_middle"] - (bb_std * float(num_std))
 
@@ -222,15 +225,15 @@ class BollingerBandsStrategy(BaseStrategy):
 
         # Generate signals using numpy where to avoid Series boolean ambiguity
         # Convert to numpy arrays to ensure no pandas Series boolean operations
-        close_values = df["Close"].values
-        bb_upper_values = df["BB_upper"].values
-        bb_lower_values = df["BB_lower"].values
+        close_values: np.ndarray = df["Close"].values
+        bb_upper_values: np.ndarray = df["BB_upper"].values
+        bb_lower_values: np.ndarray = df["BB_lower"].values
 
         df["signal"] = np.where(
             close_values <= bb_lower_values,
-            1,  # type: ignore[operator]
+            1,
             np.where(close_values >= bb_upper_values, -1, 0),
-        )  # type: ignore[operator]
+        )
 
         df["position"] = df["signal"].diff()
 
@@ -421,3 +424,35 @@ def run_strategy_backtest(
         "trades": trades,
         "strategy_description": strategy.get_description(),
     }
+
+
+def compare_strategies_backtest(
+    symbol: str,
+    start: str,
+    end: str,
+    strategy_names: list,
+    strategy_params: Optional[dict] = None,
+) -> dict:
+    """
+    Run backtests for multiple strategies separately and return their results for comparison.
+
+    Args:
+        symbol: Stock symbol (e.g., 'GS')
+        start: Start date (YYYY-MM-DD)
+        end: End date (YYYY-MM-DD)
+        strategy_names: List of strategy names to run (e.g., ['rsi', 'bollinger_bands'])
+        strategy_params: Optional dict mapping strategy_name to its params dict
+
+    Returns:
+        Dictionary mapping strategy_name to its backtest result dict
+    """
+    if strategy_params is None:
+        strategy_params = {}
+
+    results = {}
+    for strategy_name in strategy_names:
+        params = strategy_params.get(strategy_name, {})
+        result = run_strategy_backtest(symbol, start, end, strategy_name, **params)
+        results[strategy_name] = result
+
+    return results

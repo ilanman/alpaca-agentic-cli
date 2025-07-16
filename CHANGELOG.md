@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Updates and improvements to Alpaca MCP server integration
+- Enhancements to trading and backtesting agents
+- Additional tests for agent functionality
+
+### Changed
+- Refactored agent and backtesting strategy code for better performance and maintainability
+- Improved Alpaca server startup script
+
+### Fixed
+- Bug fixes in agent and backtesting logic
+### Added
 - LangChain integration with enhanced tool calling framework
 - New `LangChainTradingAgent` class with improved capabilities
 - External data source integration (yfinance, DuckDuckGo search, Wikipedia)
