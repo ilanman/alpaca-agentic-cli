@@ -27,6 +27,8 @@ from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_community.tools.asknews import AskNewsSearch
 from langchain_community.tools import DuckDuckGoSearchRun, ArxivQueryRun
 from langchain_community.tools.reddit_search.tool import RedditSearchRun
+from langchain_experimental.tools import PythonREPLTool
+from datetime import datetime, timedelta
 
 from chat.mcp_client import AlpacaMCPClient
 from chat.backtest_agent import (
@@ -166,15 +168,47 @@ class MCPToolWrapper(BaseTool):
 
 
 class YFinanceTool(BaseTool):
-    """Custom tool for getting stock data using yfinance library."""
+    """
+    Custom tool for getting stock data using yfinance.
+    Can fetch current real-time data or a single historical closing price.
+    """
 
-    name: str = "yfinance_stock_data"
+    name: str = "get_stock_data"
     description: str = (
-        "Get stock information including price, P/E ratio, market cap, and other financial data for any stock symbol"
+        "Get stock data. For real-time data, provide just the 'symbol'. "
+        "For a historical closing price, provide the 'symbol' and a 'date' in 'YYYY-MM-DD' format."
     )
 
-    def _run(self, symbol: str) -> str:
-        """Get comprehensive stock data for a given symbol."""
+    def _run(self, symbol: str, date: Optional[str] = None) -> str:
+        """Get stock data. If date is provided, gets historical close. Otherwise, gets current data."""
+        if date:
+            return self._get_historical_price(symbol, date)
+        else:
+            return self._get_current_info(symbol)
+
+    def _get_historical_price(self, symbol: str, date: str) -> str:
+        """Get the closing price for a stock on a specific date."""
+        try:
+            # Validate date format
+            parsed_date = datetime.strptime(date, "%Y-%m-%d")
+            # yfinance needs the day after for the end date to include the requested date
+            end_date = parsed_date + timedelta(days=1)
+            data = yf.download(
+                symbol,
+                start=date,
+                end=end_date.strftime("%Y-%m-%d"),
+                progress=False,
+            )
+            if data.empty:
+                return f"Error: No data found for {symbol} on or before {date}. The market may have been closed. Please try an earlier date."
+            price = data["Close"].iloc[0]
+            return f"The closing price for {symbol.upper()} on {date} was ${price:.2f}"
+        except Exception as e:
+            logger.error(f"Error getting historical price for {symbol} on {date}: {e}")
+            return f"Error getting historical price for {symbol} on {date}: {e}"
+
+    def _get_current_info(self, symbol: str) -> str:
+        """Get comprehensive current stock data for a given symbol."""
         try:
             stock = yf.Ticker(symbol)
             info = stock.info
@@ -203,9 +237,9 @@ Industry: {info.get('industry', 'N/A')}
             logger.error(f"Error getting stock data for {symbol}: {str(e)}")
             return f"Error getting stock data for {symbol}: {str(e)}"
 
-    async def _arun(self, symbol: str) -> str:
+    async def _arun(self, symbol: str, date: Optional[str] = None) -> str:
         """Async version of the tool."""
-        return self._run(symbol)
+        return self._run(symbol, date)
 
 
 class Agent:
@@ -309,6 +343,7 @@ class Agent:
                 AskNewsSearch(),
                 ArxivQueryRun(),
                 RedditSearchRun(),
+                PythonREPLTool(),
                 BacktestTool(),
                 ListStrategiesTool(),
                 InputInstructionsTool(),
@@ -380,16 +415,20 @@ When helping users:
 - Use trading tools for real-time data and trading actions
 - For stock orders, use place_stock_order with required parameters: symbol (string), side (buy/sell), quantity (number)
 - Use yfinance for stock quotes, P/E ratios, market cap, and financial data
-- Use AskNews for real-time financial news and market sentiment
+- To get a historical stock price, use `get_stock_data` with both `symbol` and `date`.
+- To perform calculations or complex comparisons, use the `PythonREPLTool`. You can write Python code to process data from other tools.
 - Use ArXiv for academic research, quantitative finance papers, and technical analysis
 - Use Reddit for community sentiment, stock discussions, and market opinions
 - Use web search for comprehensive market research
 - Use backtest tool to test trading strategies on historical data
 - Use list_strategies to show available backtesting strategies
 - Use input_instructions to get detailed input formats for backtesting strategies
+- Use compare_stock_returns to compare performance of multiple stocks over a time period
 - Combine multiple sources for comprehensive analysis
 - Always consider risk management
 - Provide clear, actionable recommendations
+
+**Formatting:** When presenting calculations, use simple, readable language. For example, use 'x' for multiplication, not LaTeX symbols like `\\times`. Use 'is approximately' instead of `\\approx`.
 
 **IMPORTANT:** For any user request mentioning a backtest, strategy name, or historical strategy test, ALWAYS call the backtest tool, even if parameters are missing or incomplete. The backtest tool will provide the user with the exact required format and a copy-pasteable example for each strategy. Do not respond with a conversational prompt for backtesting; let the tool handle all formatting and error messages.
 
