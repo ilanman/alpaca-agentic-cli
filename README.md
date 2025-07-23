@@ -1,12 +1,6 @@
 # finAI Trading Agent
 
-[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Development Status](https://img.shields.io/badge/status-development-orange.svg)](https://github.com/yourusername/finAI)
-[![LangChain](https://img.shields.io/badge/LangChain-0.3.0+-blue.svg)](https://python.langchain.com/)
-[![OpenAI](https://img.shields.io/badge/OpenAI-1.0.0+-green.svg)](https://openai.com/)
-
-A modern trading agent (called `Agent` in code) that lets you interact with the [Alpaca MCP server](https://github.com/alpacahq/alpaca-mcp-server) using natural language. **Powered by [LangChain](https://python.langchain.com/) under the hood for robust LLM orchestration and tool integration.** Features include enhanced tool calling, multiple data sources, streaming responses, and robust error handling.
+A recent fix was applied to resolve import errors caused by project restructuring. The project structure was reverted to its original layout to restore module paths and ensure stable agent initialization.
 
 ## 🚀 Features
 
@@ -161,18 +155,39 @@ python main.py --test
 - **News**: NewsAPI for market sentiment and developments
 
 ---
+## Streamlit App Usage
 
-## Architecture
+This project includes a Streamlit-based trading chatbot interface for interactive use.
 
+### Running the Streamlit App
+
+1. Ensure you have installed the dependencies as described above.
+2. Set up your `.env` file with the required environment variables (`OPENAI_API_KEY`, `MCP_SERVER_URL`).
+3. Start the Alpaca MCP server in a separate terminal (see instructions above).
+4. Run the Streamlit app with:
+
+```bash
+streamlit run streamlit_app.py
 ```
-┌───────────────┐    ┌───────────────┐    ┌───────────────┐
-│   Agent      │    │   Alpaca MCP  │    │   External    │
-│              │◄──►│   Server      │    │   APIs        │
-│              │    │               │    │               │
-└───────────────┘    └───────────────┘    └───────────────┘
-     │                       │                       │
-     ▼                       ▼                       ▼
-┌───────────────┐    ┌───────────────┐    ┌───────────────┐
-│ Conversation  │    │   Trading     │    │   Research    │
-│ Memory        │    │   Operations  │    │   Data        │
+
+or if you prefer to use the app directory version:
+
+```bash
+streamlit run app/streamlit_app.py
 ```
+
+### Features
+
+- Interactive chat interface powered by the finAI agent.
+- Model selection from supported OpenAI models.
+- Sidebar with available backtesting strategies, including detailed descriptions and Investopedia links.
+- Real-time streaming responses and conversation history.
+- Clear chat button to reset the conversation.
+
+### Notes
+
+- The Streamlit app uses asynchronous calls to the agent for responsive interaction.
+- Make sure the MCP server is running and accessible via the `MCP_SERVER_URL` environment variable.
+- The app requires Python 3.10+ and the dependencies listed in the requirements.
+
+---

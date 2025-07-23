@@ -8,62 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Updates and improvements to Alpaca MCP server integration
-- Enhancements to trading and backtesting agents
-- Additional tests for agent functionality
+- Fixed import errors related to project restructuring
+- Reverted project structure to original layout to resolve module path issues
+- Improved stability and error handling in agent initialization
 
 ### Changed
-- Refactored agent and backtesting strategy code for better performance and maintainability
-- Improved Alpaca server startup script
+- Updated import paths in agent code to match restored project structure
+- Cleaned up temporary restructuring changes
 
 ### Fixed
-- Bug fixes in agent and backtesting logic
-### Added
-- LangChain integration with enhanced tool calling framework
-- New `LangChainTradingAgent` class with improved capabilities
-- External data source integration (yfinance, DuckDuckGo search, Wikipedia)
-- Enhanced main entry point with simplified interface
-- Tool comparison and testing functionality
-- Comprehensive CHANGELOG system for tracking changes
-- MCP tool wrapper for LangChain compatibility
-- Streaming response support in LangChain agent
-- Enhanced memory management with conversation buffer
-- Better error handling and retry logic
-
-### Changed
-- Upgraded agent to use LangChain’s event streaming API for true streaming of LLM and tool output.
-- CLI now only shows assistant output, with no extra labels or prefixes, for a cleaner experience.
-- Improved error handling and user feedback for failed trades and tool errors.
-- Clarified trade status messages (e.g., “Trade request made. Awaiting response...”).
-- Cleaned up code: removed unused debugging, test artifacts, and streaming flag logic.
-
-### Removed
-- Output labeling such as `[TOOL OUTPUT]` and `[ASSISTANT]` from CLI.
-- Manual streaming flag and related CLI/test code.
-
-### Fixed
-- N/A
-
-### Security
-- N/A
-
-## [Unreleased]
-- Streaming output is now always enabled; only the assistant's output is shown in the CLI (no [TOOL OUTPUT] or [ASSISTANT] labels, no raw tool output).
-- Trade confirmation step added: users must confirm trades before execution, with a clear prompt and live price lookup.
-- Improved error handling and output clarity for failed trades and tool responses.
-- Codebase cleanup: removed unused code, debugging statements, and test artifacts; refactored for maintainability.
-- Added basic unit tests for MCPToolWrapper, covering parameter validation and trade confirmation logic.
-
-## [0.1.0] - 2024-07-13
-
-### Added
-- Initial release
-- Alpaca MCP server integration
-- OpenAI-powered trading agent
-- Basic CLI interface
-- Environment variable configuration
-- Token usage tracking
-- Disposable query support
+- Resolved ModuleNotFoundError for 'src.chat.mcp_client' by restoring original directory layout
 
 ---
 
